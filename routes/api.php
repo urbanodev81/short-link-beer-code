@@ -2,46 +2,27 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\ShortLinkController;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
-
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
-
-
-
-// Rotas públicas (sem autenticação)
+// Rotas API com prefixo '/api' automático
 Route::prefix('v1')->group(function () {
-    // Rota de status da API
+    // Rota de status
     Route::get('/status', function () {
         return response()->json(['status' => 'API Online']);
     });
 
-    // Rotas de autenticação
-    Route::post('/login', [AuthController::class, 'login']);
-    Route::post('/register', [AuthController::class, 'register']);
-});
+    // Rota de login
+    Route::post('/login', [LoginController::class, 'login'])->name('login');
+    Route::post('/short-links', [ShortLinkController::class, 'store'])
+    ->middleware('guest')
+    ->name('short-links.store');
 
-// Rotas protegidas (com autenticação)
-Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
-    // Rota do usuário autenticado
-    Route::get('/user', function (Request $request) {
-        return $request->user();
+
+    // Rotas protegidas (com autenticação)
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::get('/user', function (Request $request) {
+            return $request->user();
+        });
     });
-
-    // Rotas para ShortLinks (exemplo)
-    Route::apiResource('shortlinks', ShortLinkController::class);
-
-    // Logout
-    Route::post('/logout', [AuthController::class, 'logout']);
 });
