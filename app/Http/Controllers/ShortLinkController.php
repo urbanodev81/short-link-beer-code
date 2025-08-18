@@ -23,7 +23,7 @@ class ShortLinkController extends Controller
     {
         $request->validate([
             'url' => 'required|url',
-            'name' => 'required|string|max:30|unique:shortlinks',
+            'name' => 'required|string|max:30|alpha|unique:short_links',
         ]);
 
         $shortLink = ShortLink::create($request->all());
@@ -41,11 +41,10 @@ class ShortLinkController extends Controller
     }
 
     // Example: Redirect to the original URL
-    public function show($code)
+    public function show($shortlinks)
     {
-        // Placeholder: Replace with actual lookup logic
-        // $shortLink = ShortLink::where('code', $code)->firstOrFail();
-        // return redirect($shortLink->url);
-        return response()->json(['message' => 'Redirect logic not implemented.'], 501);
+        $shortLink = ShortLink::where('name', $shortlinks)->firstOrFail();
+        return redirect($shortLink->url);
+        // return response()->json(['message' => 'Redirect logic not implemented.'], 501);
     }
 }

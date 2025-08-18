@@ -15,8 +15,10 @@ Route::prefix('v1')->group(function () {
     // Rota de login
     Route::post('/login', [LoginController::class, 'login'])->name('login');
     Route::post('/short-links', [ShortLinkController::class, 'store'])
-    ->middleware('guest')
+    ->middleware('auth:sanctum')
     ->name('short-links.store');
+
+
 
 
     // Rotas protegidas (com autenticação)

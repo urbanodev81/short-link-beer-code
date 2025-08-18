@@ -10,11 +10,12 @@ class ShortLink extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id',
-        'url',
-        'code',
         'name',
+        'url',
+        'clicks',
     ];
+
+    protected $table = 'short_links';
 
     // Optionally, define relationship to User
     public function user()
