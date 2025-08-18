@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ShortLink;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -22,17 +23,20 @@ class ShortLinkController extends Controller
     {
         $request->validate([
             'url' => 'required|url',
+            'name' => 'required|string|max:30|unique:shortlinks',
         ]);
+
+        $shortLink = ShortLink::create($request->all());
         // Placeholder: Replace with actual short link creation logic
         // $shortLink = ShortLink::create([
         //     'user_id' => Auth::id(),
         //     'url' => $request->url,
         //     'code' => Str::random(6),
         // ]);
-        $shortLink = [
-            'url' => $request->url,
-            'code' => 'abc123',
-        ];
+        // $shortLink = [
+        //     'url' => $request->url,
+        //     'code' => 'abc123',
+        // ];
         return response()->json($shortLink, 201);
     }
 
